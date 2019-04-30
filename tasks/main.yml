@@ -1,0 +1,26 @@
+---
+- name: Ensure apt-transport-https is installed
+  apt:
+    name: apt-transport-https
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: Add Syncthing repo PGP keys
+  apt_key:
+    url: https://syncthing.net/release-key.txt
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Add Syncthing stable repository
+  apt_repository:
+    repo: deb https://apt.syncthing.net/ syncthing stable
+    state: present
+    filename: syncthing.list
+  when: ansible_os_family == "Debian"
+
+- name: Update and install Syncthing
+  apt:
+    name: syncthing
+    state: latest
+    update_cache: yes
+  when: ansible_os_family == "Debian"
